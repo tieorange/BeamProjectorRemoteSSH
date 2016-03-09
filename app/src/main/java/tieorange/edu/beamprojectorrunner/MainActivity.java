@@ -1,5 +1,6 @@
 package tieorange.edu.beamprojectorrunner;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "MY_TAG";
     private int mMorphCounter1 = 1;
+    private String ip_address = "172.23.65.159";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +93,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Integer... params) {
                 try {
-                    executeRemoteCommand("root", "admin", "192.168.43.19", 22);
+                    ip_address =
+                    executeRemoteCommand("root", "admin", ip_address, 22);
                     Log.d(TAG, "after executeRemoteCommand()");
 
                 } catch (Exception e) {
@@ -131,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
                 "sleep 1\n" +
                 "am start -a android.intent.action.VIEW -d https://web.facebook.com/Sieci-Urządzeń-Mobilnych-211004225604000/\n" +
                 "\n";
+        String commandVibration =
+                "input keyevent 4\n" +
+                        "am start -n tieorange.edu.vibrator/.MainActivity\n" +
+                        "sleep 2\n" +
+                        "input keyevent 4\n";
 
 
         // Execute command
@@ -162,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
 

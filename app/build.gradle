@@ -22,9 +22,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
     compile files('libs/jsch-0.1.53.jar')
-    compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56' // commit hash
-
+    // commit hash
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
+    compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
+    compile 'com.android.support:support-v4:23.2.0'
 }
