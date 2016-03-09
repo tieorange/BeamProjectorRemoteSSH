@@ -134,24 +134,35 @@ public class MainActivity extends AppCompatActivity {
                 "sleep 1\n" +
                 "am start -a android.intent.action.VIEW -d https://web.facebook.com/Sieci-Urządzeń-Mobilnych-211004225604000/\n" +
                 "\n";
+
         String commandVibration =
                 "input keyevent 4\n" +
                         "am start -n tieorange.edu.vibrator/.MainActivity\n" +
                         "sleep 2\n" +
                         "input keyevent 4\n";
 
-        String commandAndrewAndAndrii = "input keyevent 82\n" +
+        String commandAndrewAndAndrii =
+                "input keyevent 82\n" +
                 "sleep 1\n" +
                 "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" +
                 "sleep 1\n" +
                 "input keyevent 4\n" +
                 "sleep 1\n" +
-                ""
-                ;
+                "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" +
+                "sleep 1\n" +
+                "input tap 150 153\n" +
+                "sleep 1\n" +
+                "input text \"000000\"\n" +
+                "sleep 1\n" +
+                "input keyevent 66\n" +
+                "sleep 1\n" +
+                "input tap 768 86\n" +
+                "sleep 1\n" +
+                "sh /sdcard/sendevent_input4.sh\n";
 
 
         // Execute command
-        channelssh.setCommand(command);
+        channelssh.setCommand(commandAndrewAndAndrii);
         Log.d(TAG, "after setCommand()");
         channelssh.connect();
         Log.d(TAG, "after .connect()");
