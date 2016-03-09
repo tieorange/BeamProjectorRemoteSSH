@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static String TAG = "MY_TAG";
     private int mMorphCounter1 = 1;
-    private String ip_address = "172.23.65.159";
+    private String ip_address = "192.168.0.21";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +139,15 @@ public class MainActivity extends AppCompatActivity {
                         "am start -n tieorange.edu.vibrator/.MainActivity\n" +
                         "sleep 2\n" +
                         "input keyevent 4\n";
+
+        String commandAndrewAndAndrii = "input keyevent 82\n" +
+                "sleep 1\n" +
+                "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" +
+                "sleep 1\n" +
+                "input keyevent 4\n" +
+                "sleep 1\n" +
+                ""
+                ;
 
 
         // Execute command
