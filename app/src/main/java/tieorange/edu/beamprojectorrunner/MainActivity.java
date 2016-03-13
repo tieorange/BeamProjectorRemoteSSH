@@ -30,25 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private int mMorphCounter1 = 1;
     private String ip_address = "192.168.0.21";
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
-        btnMorphSimple.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMorphButton1ClickedSimple(btnMorphSimple);
-            }
-
-        });
-
-        morphToSquare(btnMorphSimple, 1);
-    }
+    public static final String IP_ADDRESS_1 = "tieorange.edu.beamprojectorrunner.MainActivity.IP_ADDRESS_1";
 
     private void onMorphButton1ClickedSimple(MorphingButton btnMorphSimple) {
         if (mMorphCounter1 == 0) {
@@ -174,6 +156,37 @@ public class MainActivity extends AppCompatActivity {
         return baos.toString();
     }
 
+
+    //region AppCompactActivity methods
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
+        btnMorphSimple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMorphButton1ClickedSimple(btnMorphSimple);
+            }
+
+        });
+
+        morphToSquare(btnMorphSimple, 1);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -196,6 +209,8 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //endregion AppCompactActivity methods
 
     public int dimen(@DimenRes int resId) {
         return (int) getResources().getDimension(resId);
