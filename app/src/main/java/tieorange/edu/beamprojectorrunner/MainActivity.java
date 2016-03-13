@@ -42,53 +42,16 @@ public class MainActivity extends AppCompatActivity {
         btnMorphSimple.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onMorphButton1ClickedSimple(btnMorphSimple);
+                MorphButton.onMorphButton1ClickedSimple(MainActivity.this, btnMorphSimple);
             }
 
         });
 
-        morphToSquare(btnMorphSimple, 1);
+        MorphButton.morphToSquare(btnMorphSimple, 1, this);
     }
 
-    private void onMorphButton1ClickedSimple(MorphingButton btnMorphSimple) {
-        if (mMorphCounter1 == 0) {
-            mMorphCounter1++;
-            morphToSquare(btnMorphSimple, integer(R.integer.mb_animation));
-        } else if (mMorphCounter1 == 1) {
-            mMorphCounter1 = 0;
-            morphToSuccessSimple(btnMorphSimple);
 
-            runSSHCommand();
-        }
-
-        morphToSuccessSimple(btnMorphSimple);
-    }
-
-    private void morphToSuccessSimple(final MorphingButton btnMorph) {
-        MorphingButton.Params circle = MorphingButton.Params.create()
-                .duration(integer(R.integer.mb_animation))
-                .cornerRadius(dimen(R.dimen.mb_height_56) * 2)
-                .width(dimen(R.dimen.mb_height_56) * 3)
-                .height(dimen(R.dimen.mb_height_56) * 3)
-                .color(color(R.color.mb_green))
-                .colorPressed(color(R.color.mb_green_dark))
-                .icon(R.drawable.ic_projector);
-        btnMorph.morph(circle);
-    }
-
-    private void morphToSquare(final MorphingButton btnMorph, int duration) {
-        MorphingButton.Params square = MorphingButton.Params.create()
-                .duration(duration)
-                .cornerRadius(dimen(R.dimen.mb_height_56))
-                .width(dimen(R.dimen.mb_width_square))
-                .height(dimen(R.dimen.mb_height_square))
-                .color(color(R.color.mb_blue))
-                .colorPressed(color(R.color.mb_blue_dark))
-                .text(getString(R.string.mb_button));
-        btnMorph.morph(square);
-    }
-
-    private void runSSHCommand() {
+    public void runSSHCommand() {
         new AsyncTask<Integer, Void, Void>() {
             @Override
             protected Void doInBackground(Integer... params) {
