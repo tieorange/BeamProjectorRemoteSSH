@@ -1,19 +1,19 @@
 package tieorange.edu.beamprojectorrunner;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IntegerRes;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 
 import com.dd.morphingbutton.MorphingButton;
 import com.jcraft.jsch.ChannelExec;
@@ -21,17 +21,34 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String IP_ADDRESS_1 = "tieorange.edu.beamprojectorrunner.MainActivity.IP_ADDRESS_1";
-    private static String TAG = "MainActivity";
-
+    private static String TAG = "MY_TAG";
     private int mMorphCounter1 = 1;
     private String ip_address = "192.168.0.21";
 
-    public EditText et_ipAddress1;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+        final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
+        btnMorphSimple.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMorphButton1ClickedSimple(btnMorphSimple);
+            }
+
+        });
+
+        morphToSquare(btnMorphSimple, 1);
+    }
 
     private void onMorphButton1ClickedSimple(MorphingButton btnMorphSimple) {
         if (mMorphCounter1 == 0) {
@@ -157,53 +174,6 @@ public class MainActivity extends AppCompatActivity {
         return baos.toString();
     }
 
-
-    //region AppCompactActivity methods
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        et_ipAddress1 = (EditText) findViewById(R.id.etIpAddress1);
-
-        final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
-        btnMorphSimple.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onMorphButton1ClickedSimple(btnMorphSimple);
-            }
-
-        });
-
-        morphToSquare(btnMorphSimple, 1);
-
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        ip_address = sharedPref.getString(IP_ADDRESS_1, "127.0.0.1 noope");
-        et_ipAddress1.setText(ip_address);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(IP_ADDRESS_1, ip_address);
-        editor.commit();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        if (outState != null) {
-            outState.putString(IP_ADDRESS_1, ip_address);
-        }
-
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -226,8 +196,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    //endregion AppCompactActivity methods
 
     public int dimen(@DimenRes int resId) {
         return (int) getResources().getDimension(resId);
