@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.IntegerRes;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -23,16 +24,42 @@ import com.jcraft.jsch.Session;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Properties;
+import java.util.regex.Pattern;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText mUiIP1;
-    private EditText mUiIP2;
+    //region Fields
 
-    private EditText mUiEtIP;
-    private static String TAG = "MY_TAG";
-    private String ip_address = "192.168.0.28";
+    private final static String TAG = "MainActivity";
+
+    @Bind(R.id.ip1_et1)
+    public EditText mUiIp1Et1;
+    @Bind(R.id.ip1_et2)
+    public EditText mUiIp1Et2;
+    @Bind(R.id.ip1_et3)
+    public EditText mUiIp1Et3;
+    @Bind(R.id.ip1_et4)
+    public EditText mUiIp1Et4;
+
+    @Bind(R.id.ip2_et1)
+    public EditText mUiIp2Et1;
+    @Bind(R.id.ip2_et2)
+    public EditText mUiIp2Et2;
+    @Bind(R.id.ip2_et3)
+    public EditText mUiIp2Et3;
+    @Bind(R.id.ip2_et4)
+    public EditText mUiIp2Et4;
+
+    private String ip_address1 = "";
+    private String ip_address2 = "";
     private SharedPreferences mSharedPreferences;
+
+    //endregion Fields
+
+    //region Activity methods
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,13 +68,16 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
+
         mSharedPreferences = getPreferences(MODE_PRIVATE);
 
-        // restore ip address 1
-        ip_address = mSharedPreferences.getString(getString(R.string.ip_address1), "127.0.0.1");
+        ip_address1 = mSharedPreferences.getString(string(R.string.ip_address1), "127.0.0.1");
+        ip_address2 = mSharedPreferences.getString(string(R.string.ip_address2), "127.0.0.1");
 
-        mUiEtIP = (EditText) findViewById(R.id.etIpAddress1);
-        mUiEtIP.setText(ip_address);
+
+        initializeIpAddress1EditTexts(ip_address1);
+        initializeIpAddress2EditTexts(ip_address2);
 
         final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
         btnMorphSimple.setOnClickListener(new View.OnClickListener() {
@@ -55,54 +85,33 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MorphButton.onMorphButton1ClickedSimple(MainActivity.this, btnMorphSimple);
             }
-
         });
 
         MorphButton.morphToSquare(btnMorphSimple, 1, this);
 
-        // setup ip edit texts:
-        // setup edit text (ip)
-        mUiIP1 = (EditText) findViewById(R.id.main_ip1);
-        mUiIP2 = (EditText) findViewById(R.id.main_ip2);
+        linkEditTexts(mUiIp1Et1, mUiIp1Et2);
+        linkEditTexts(mUiIp1Et2, mUiIp1Et3);
+        linkEditTexts(mUiIp1Et3, mUiIp1Et4);
+        linkEditTexts(mUiIp1Et4, mUiIp2Et1);
 
-        mUiIP1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length() >= 3){
-                    // TODO: focus on the next edit text
-                    mUiIP2.requestFocus();
-                }
-            }
-        });
+        linkEditTexts(mUiIp2Et1, mUiIp2Et2);
+        linkEditTexts(mUiIp2Et2, mUiIp2Et3);
+        linkEditTexts(mUiIp2Et3, mUiIp2Et4);
     }
 
-    public void runSSHCommand() {
-        ip_address = mUiEtIP.getText().toString();
-        new AsyncTask<Integer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Integer... params) {
-                try {
-                    ip_address =
-                            executeRemoteCommand("root", "admin", ip_address, 22);
-                    Log.d(TAG, "after executeRemoteCommand()");
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute(1);
-        Log.d(TAG, "after }.execute(1);");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -112,10 +121,116 @@ public class MainActivity extends AppCompatActivity {
         saveValue();
     }
 
-    public void saveValue() {
+    //endregion Activity methods
+
+    private void saveValue() {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(getString(R.string.ip_address1), mUiEtIP.getText().toString());
+        editor.putString(getString(R.string.ip_address1), getIpAddress1FromEditTexts());
+        editor.putString(getString(R.string.ip_address2), getIpAddress2FromEditTexts());
         editor.apply();
+    }
+
+    //region IpAddresses Edit Text Methods
+
+    private void initializeIpAddress1EditTexts(String ipAddress){
+        String[] splitIdAddress = ipAddress.split(Pattern.quote("."));
+        mUiIp1Et1.setText(splitIdAddress[0]);
+        mUiIp1Et2.setText(splitIdAddress[1]);
+        mUiIp1Et3.setText(splitIdAddress[2]);
+        mUiIp1Et4.setText(splitIdAddress[3]);
+    }
+
+    private void initializeIpAddress2EditTexts(String ipAddress){
+        String[] splitIdAddress = ipAddress.split(Pattern.quote("."));
+        mUiIp2Et1.setText(splitIdAddress[0]);
+        mUiIp2Et2.setText(splitIdAddress[1]);
+        mUiIp2Et3.setText(splitIdAddress[2]);
+        mUiIp2Et4.setText(splitIdAddress[3]);
+    }
+
+    private String getIpAddress1FromEditTexts(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(mUiIp1Et1.getText().toString() + ".");
+        sb.append(mUiIp1Et2.getText().toString() + ".");
+        sb.append(mUiIp1Et3.getText().toString() + ".");
+        sb.append(mUiIp1Et4.getText().toString());
+
+        return sb.toString();
+    }
+
+    private String getIpAddress2FromEditTexts(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(mUiIp2Et1.getText().toString() + ".");
+        sb.append(mUiIp2Et2.getText().toString() + ".");
+        sb.append(mUiIp2Et3.getText().toString() + ".");
+        sb.append(mUiIp2Et4.getText().toString());
+
+        return sb.toString();
+    }
+
+    //endregion IpAddresses Edit Text Methods
+
+    //region IP TextWatcher Listeners
+
+    private void linkEditTexts(final EditText et1, final EditText et2){
+
+        ShortTextWatcher fromEt1ToEt2 = new ShortTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() >= 3){
+                    et2.requestFocus();
+                }
+            }
+        };
+
+        ShortTextWatcher fromEt2BackToEt1 = new ShortTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (count == 0 && s.length() == 0){
+                    et1.requestFocus();
+                }
+            }
+        };
+
+        et1.addTextChangedListener(fromEt1ToEt2);
+        et2.addTextChangedListener(fromEt2BackToEt1);
+    }
+
+    private abstract class ShortTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //  empty by design
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            //  empty by design
+        }
+    }
+
+    //endregion IP TextWatcher Listeners
+
+    //region SSH methods
+
+    public void runSSHCommand() {
+        new AsyncTask<Integer, Void, Void>() {
+            @Override
+            protected Void doInBackground(Integer... params) {
+                try {
+                    ip_address1 =
+                            executeRemoteCommand("root", "admin", getIpAddress1FromEditTexts(), 22);
+                    Log.d(TAG, "after executeRemoteCommand()");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(1);
+        Log.d(TAG, "after }.execute(1);");
     }
 
     public static String executeRemoteCommand(String username, String password, String hostname, int port)
@@ -194,28 +309,9 @@ public class MainActivity extends AppCompatActivity {
         return baos.toString();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    //endregion SSH methods
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+    //region Utility methods
 
     public int dimen(@DimenRes int resId) {
         return (int) getResources().getDimension(resId);
@@ -229,5 +325,10 @@ public class MainActivity extends AppCompatActivity {
         return getResources().getInteger(resId);
     }
 
+    public String string(@StringRes int resId){
+        return getString(resId);
+    }
+
+    //endregion Utility methods
 
 }

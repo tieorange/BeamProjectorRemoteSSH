@@ -12,56 +12,146 @@
     tools:context="tieorange.edu.beamprojectorrunner.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <EditText
-        android:id="@+id/main_ip1"
+    <LinearLayout
+        android:id="@+id/ll_ip1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:hint="255"
-        android:inputType="number"
-        android:maxLength="3"
-        android:text="" />
+        android:layout_centerHorizontal="true">
 
-    <!--<TextView-->
-    <!--android:id="@+id/main_dot1"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_toRightOf="@id/main_ip1"-->
-    <!--android:text="." />-->
+        <EditText
+            android:id="@+id/ip1_et1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
 
-    <EditText
-        android:id="@+id/main_ip2"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/ip1_et2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/ip1_et3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/ip1_et4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_ip2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/main_ip1"
-        android:hint="255"
-        android:inputType="number"
-        android:maxLength="3"
-        android:text="" />
+        android:layout_below="@id/ll_ip1"
+        android:layout_centerHorizontal="true">
 
+        <EditText
+            android:id="@+id/ip2_et1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
 
+        <EditText
+            android:id="@+id/ip2_et2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
 
-    <EditText
-        android:id="@+id/etIpAddress1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="100dp"
-        android:digits="0123456789."
-        android:hint="IP address"
-        android:inputType="phone"
-        android:textAlignment="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/ip2_et3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:typeface="monospace" />
+
+        <EditText
+            android:id="@+id/ip2_et4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="255"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text=""
+            android:typeface="monospace" />
+    </LinearLayout>
 
     <com.dd.morphingbutton.MorphingButton
         android:id="@+id/btnMorphSimple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etIpAddress1"
+        android:layout_below="@id/ll_ip2"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:layout_margin="20dp"
+        android:layout_marginTop="100dp"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>
