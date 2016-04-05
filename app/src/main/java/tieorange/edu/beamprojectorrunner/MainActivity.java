@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.dd.morphingbutton.MorphingButton;
 import com.jcraft.jsch.ChannelExec;
@@ -26,9 +28,10 @@ import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
 
+    private EditText mUiEtIP;
     private static String TAG = "MY_TAG";
-    private int mMorphCounter1 = 1;
-    private String ip_address = "192.168.0.21";
+    private String ip_address = "172.23.66.17";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mUiEtIP = (EditText) findViewById(R.id.etIpAddress1);
+        mUiEtIP.setText(ip_address);
 
         final MorphingButton btnMorphSimple = (MorphingButton) findViewById(R.id.btnMorphSimple);
         btnMorphSimple.setOnClickListener(new View.OnClickListener() {
@@ -50,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
         MorphButton.morphToSquare(btnMorphSimple, 1, this);
     }
 
-
     public void runSSHCommand() {
+        ip_address = mUiEtIP.getText().toString();
         new AsyncTask<Integer, Void, Void>() {
             @Override
             protected Void doInBackground(Integer... params) {
                 try {
                     ip_address =
-                    executeRemoteCommand("root", "admin", ip_address, 22);
+                            executeRemoteCommand("root", "admin", ip_address, 22);
                     Log.d(TAG, "after executeRemoteCommand()");
 
                 } catch (Exception e) {
@@ -106,22 +111,27 @@ public class MainActivity extends AppCompatActivity {
 
         String commandAndrewAndAndrii =
                 "input keyevent 82\n" +
-                "sleep 1\n" +
-                "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" +
-                "sleep 1\n" +
-                "input keyevent 4\n" +
-                "sleep 1\n" +
-                "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" +
-                "sleep 1\n" +
-                "input tap 150 153\n" +
-                "sleep 1\n" +
-                "input text \"000000\"\n" +
-                "sleep 1\n" +
-                "input keyevent 66\n" +
-                "sleep 1\n" +
-                "input tap 768 86\n" +
-                "sleep 1\n" +
-                "sh /sdcard/sendevent_input4.sh\n";
+                        "sleep 1\n" +
+                        "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" + // start pojector
+                        "sleep 1\n"  +
+                        "input keyevent 4\n" +
+                        "sleep 1\n" +
+                        "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" + // start Chrome Remote
+                        "sleep 1\n" +
+                        "content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0\n" + // turn of auto rotate
+                        "sleep 1\n" +
+                        "content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1\n" + // force landscape
+                        "sleep 1\n" +
+                        "input tap 150 153\n" + // MacbookPro
+                        "sleep 2\n" +
+                        "input text \"000000\"\n" + // password
+                        "sleep 1\n" +
+                        "input keyevent 66\n" + // enter
+                        "sleep 2\n" +
+                        "input tap 768 86\n" // full screen
+//                        "sleep 1\n" +
+//                        "sh /sdcard/sendevent_input4.sh\n"
+                ;
 
 
         // Execute command

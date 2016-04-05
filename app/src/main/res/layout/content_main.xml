@@ -18,19 +18,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textAlignment="center"
-        android:inputType="phone"
+        android:layout_marginBottom="100dp"
         android:digits="0123456789."
-        android:hint="IP address"/>
+        android:hint="IP address"
+        android:inputType="phone"
+        android:textAlignment="center" />
 
     <com.dd.morphingbutton.MorphingButton
         android:id="@+id/btnMorphSimple"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/etIpAddress1"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:textColor="@android:color/white"
-        android:layout_below="@id/etIpAddress1"
-        android:layout_centerHorizontal="true"/>
+        android:textColor="@android:color/white" />
 
 </RelativeLayout>
