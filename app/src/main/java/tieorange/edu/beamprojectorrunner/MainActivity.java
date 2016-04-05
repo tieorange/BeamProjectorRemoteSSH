@@ -8,6 +8,8 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -23,6 +25,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.Properties;
 
 public class MainActivity extends AppCompatActivity {
+
+    private EditText mUiIP1;
+    private EditText mUiIP2;
 
     private EditText mUiEtIP;
     private static String TAG = "MY_TAG";
@@ -54,6 +59,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
         MorphButton.morphToSquare(btnMorphSimple, 1, this);
+
+        // setup ip edit texts:
+        // setup edit text (ip)
+        mUiIP1 = (EditText) findViewById(R.id.main_ip1);
+        mUiIP2 = (EditText) findViewById(R.id.main_ip2);
+
+        mUiIP1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() >= 3){
+                    // TODO: focus on the next edit text
+                    mUiIP2.requestFocus();
+                }
+            }
+        });
     }
 
     public void runSSHCommand() {
