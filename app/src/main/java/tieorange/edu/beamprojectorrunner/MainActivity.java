@@ -20,6 +20,7 @@ import android.widget.EditText;
 import com.dd.morphingbutton.MorphingButton;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.ByteArrayOutputStream;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
     //region IpAddresses Edit Text Methods
 
-    private void initializeIpAddress1EditTexts(String ipAddress){
+    private void initializeIpAddress1EditTexts(String ipAddress) {
         String[] splitIdAddress = ipAddress.split(Pattern.quote("."));
         mUiIp1Et1.setText(splitIdAddress[0]);
         mUiIp1Et2.setText(splitIdAddress[1]);
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         mUiIp1Et4.setText(splitIdAddress[3]);
     }
 
-    private void initializeIpAddress2EditTexts(String ipAddress){
+    private void initializeIpAddress2EditTexts(String ipAddress) {
         String[] splitIdAddress = ipAddress.split(Pattern.quote("."));
         mUiIp2Et1.setText(splitIdAddress[0]);
         mUiIp2Et2.setText(splitIdAddress[1]);
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         mUiIp2Et4.setText(splitIdAddress[3]);
     }
 
-    private String getIpAddress1FromEditTexts(){
+    private String getIpAddress1FromEditTexts() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(mUiIp1Et1.getText().toString() + ".");
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    private String getIpAddress2FromEditTexts(){
+    private String getIpAddress2FromEditTexts() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(mUiIp2Et1.getText().toString() + ".");
@@ -174,12 +175,12 @@ public class MainActivity extends AppCompatActivity {
 
     //region IP TextWatcher Listeners
 
-    private void linkEditTexts(final EditText et1, final EditText et2){
+    private void linkEditTexts(final EditText et1, final EditText et2) {
 
         ShortTextWatcher fromEt1ToEt2 = new ShortTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.length() >= 3){
+                if (s.length() >= 3) {
                     et2.requestFocus();
                 }
             }
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
         ShortTextWatcher fromEt2BackToEt1 = new ShortTextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (count == 0 && s.length() == 0){
+                if (count == 0 && s.length() == 0) {
                     et1.requestFocus();
                 }
             }
@@ -220,10 +221,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Void doInBackground(Integer... params) {
                 try {
-                    ip_address1 =
-                            executeRemoteCommand("root", "admin", getIpAddress1FromEditTexts(), 22);
+                    executeRemoteCommand("root", "admin", getIpAddress1FromEditTexts(), 22);
                     Log.d(TAG, "after executeRemoteCommand()");
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 22);
+                    Log.d(TAG, "after executeRemoteCommand()");
+
+                } catch (JSchException jsce) {
+                    try {
+                        executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 2222);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -325,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
         return getResources().getInteger(resId);
     }
 
-    public String string(@StringRes int resId){
+    public String string(@StringRes int resId) {
         return getString(resId);
     }
 
