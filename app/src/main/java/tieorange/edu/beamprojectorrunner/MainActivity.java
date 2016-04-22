@@ -257,6 +257,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute(1);
 
+        new AsyncTask<Integer, Void, Void>() {
+            @Override
+            protected Void doInBackground(Integer... params) {
+                try {
+//                    executeRemoteCommand("root", "admin", "192.168.0.34", 2222, getCommand1());
+                    executeRemoteCommand("root", "admin", "192.168.0.28", 22, getCommand2());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute(1);
+
         Log.d(TAG, "after }.execute(1);");
     }
 
@@ -312,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getCommand1() {
+        String sleep = "sleep 1\n";
         String commandMacbookProSecondRaw = "input tap 421 267\n";
         String commandMacbookProFirstRaw = "input tap 150 153\n";
         String tapMyUsersField = "input tap 250 250\n"; // moi polzovateli
@@ -320,6 +334,8 @@ public class MainActivity extends AppCompatActivity {
         String teamViewerPackageName = "com.teamviewer.remotecontrollib.activity/.MainActivity\n";
         String teamViewerCommandXDA = "am start -a android.intent.action.MAIN -n com.teamviewer.teamviewer.market.mobile/com.teamviewer.remotecontrollib.activity.MainActivity\n";
         String teamViewrAppName = "com.teamviewer.teamviewer.market.mobile.application.RemoteControlApplication";
+        String swipeLeftToRight = "input swipe 0 400 450 900\n";
+
 
         String commandAndrewAndAndrii =
                 "input keyevent 82\n" + // power on
@@ -331,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 //                        "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" + // start Chrome Remote
 //                        "am start -n " + teamViewerPackageName + // start Team Viewer
                         teamViewerCommandXDA +
-                        "sleep 3\n" +
+                        "sleep 4\n" +
 //                        "content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0\n" + // turn of auto rotate
 //                        "sleep 1\n" +
 //                        "content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1\n" + // force landscape
@@ -341,13 +357,36 @@ public class MainActivity extends AppCompatActivity {
 //                        "input text \"000000\"\n" + // password
                         tapMacbook +
                         "sleep 1\n" +
-                        "input keyevent 66\n" + // enter
-                        "sleep 2\n" +
-                        "input tap 700 90\n"; // full screen
-//                        "sleep 1\n" +
+                        arrowDown +
+                        "input keyevent 66\n"; // enter
+//                        sleep +
+//                        swipeLeftToRight +
+//                        sleep +
+//                        swipeLeftToRight +
+//                        sleep +
+//                        swipeLeftToRight +
+//                        sleep;
+
+
 //                        "sh /sdcard/sendevent_input4.sh\n"                ;
 
         return commandAndrewAndAndrii;
+    }
+
+    public String getCommand2() {
+        String swipeLeftToRight = "input swipe 0 400 450 900\n";
+        String sleep = "sleep 1\n";
+
+        String command2 = getCommand1() + // enter
+                sleep +
+                swipeLeftToRight +
+                sleep +
+                swipeLeftToRight +
+                sleep +
+                swipeLeftToRight +
+                sleep;
+
+        return command2;
     }
 
     //endregion SSH methods
