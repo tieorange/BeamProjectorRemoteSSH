@@ -217,37 +217,50 @@ public class MainActivity extends AppCompatActivity {
     //region SSH methods
 
     public void runSSHCommand() {
+//        new AsyncTask<Integer, Void, Void>() {
+//            @Override
+//            protected Void doInBackground(Integer... params) {
+//                try {
+//                    executeRemoteCommand("root", "admin", getIpAddress1FromEditTexts(), 22, getCommand1());
+//                    Log.d(TAG, "after executeRemoteCommand()");
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                try {
+//                    executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 22, getCommand1());
+//                    Log.d(TAG, "after executeRemoteCommand()");
+//
+//                } catch (JSchException jsce) {
+//                    try {
+//                        executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 2222, getCommand1());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                return null;
+//            }
+//        }.execute(1);
         new AsyncTask<Integer, Void, Void>() {
             @Override
             protected Void doInBackground(Integer... params) {
                 try {
-                    executeRemoteCommand("root", "admin", getIpAddress1FromEditTexts(), 22);
-                    Log.d(TAG, "after executeRemoteCommand()");
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 22);
-                    Log.d(TAG, "after executeRemoteCommand()");
-
-                } catch (JSchException jsce) {
-                    try {
-                        executeRemoteCommand("root", "admin", getIpAddress2FromEditTexts(), 2222);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+//                    executeRemoteCommand("root", "admin", "192.168.0.34", 2222, getCommand1());
+                    executeRemoteCommand("root", "admin", "192.168.0.34", 22, getCommand1());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
             }
         }.execute(1);
+
         Log.d(TAG, "after }.execute(1);");
     }
 
-    public static String executeRemoteCommand(String username, String password, String hostname, int port)
+    public static String executeRemoteCommand(String username, String password, String hostname, int port, String command)
             throws Exception {
         JSch jsch = new JSch();
         Session session = jsch.getSession(username, hostname, port);
@@ -266,52 +279,27 @@ public class MainActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         channelssh.setOutputStream(baos);
 
-        String command = "input keyevent 82\n" +
-                "sleep 1\n" +
-                "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" +
-                "sleep 1\n" +
-                "input keyevent 4\n" +
-                "sleep 1\n" +
-                "am start -a android.intent.action.VIEW -d https://web.facebook.com/Sieci-Urządzeń-Mobilnych-211004225604000/\n" +
-                "\n";
-
-        String commandVibration =
-                "input keyevent 4\n" +
-                        "am start -n tieorange.edu.vibrator/.MainActivity\n" +
-                        "sleep 2\n" +
-                        "input keyevent 4\n";
-
-        String commandMacbookProSecondRaw = "input tap 421 267\n";
-        String commandMacbookProFirstRaw = "input tap 150 153\n";
-
-
-        String commandAndrewAndAndrii =
-                "input keyevent 82\n" +
-                        "sleep 1\n" +
-                        "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" + // start pojector
-                        "sleep 1\n" +
-                        "input keyevent 4\n" +
-                        "sleep 1\n" +
-                        "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" + // start Chrome Remote
-                        "sleep 1\n" +
-                        "content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0\n" + // turn of auto rotate
-                        "sleep 1\n" +
-                        "content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1\n" + // force landscape
-                        "sleep 1\n" +
-                        commandMacbookProSecondRaw + // MacbookPro
-                        "sleep 2\n" +
-                        "input text \"000000\"\n" + // password
-                        "sleep 1\n" +
-                        "input keyevent 66\n" + // enter
-                        "sleep 2\n" +
-                        "input tap 700 90\n" // full screen
-//                        "sleep 1\n" +
-//                        "sh /sdcard/sendevent_input4.sh\n"
-                ;
+//        String command = "input keyevent 82\n" +
+//                "sleep 1\n" +
+//                "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" +
+//                "sleep 1\n" +
+//                "input keyevent 4\n" +
+//                "sleep 1\n" +
+//                "am start -a android.intent.action.VIEW -d https://web.facebook.com/Sieci-Urządzeń-Mobilnych-211004225604000/\n" +
+//                "\n";
+//
+//        String commandVibration =
+//                "input keyevent 4\n" +
+//                        "am start -n tieorange.edu.vibrator/.MainActivity\n" +
+//                        "sleep 2\n" +
+//                        "input keyevent 4\n";
+//
+//        String commandMacbookProSecondRaw = "input tap 421 267\n";
+//        String commandMacbookProFirstRaw = "input tap 150 153\n";
 
 
         // Execute command
-        channelssh.setCommand(commandAndrewAndAndrii);
+        channelssh.setCommand(command);
         Log.d(TAG, "after setCommand()");
         channelssh.connect();
         Log.d(TAG, "after .connect()");
@@ -321,6 +309,45 @@ public class MainActivity extends AppCompatActivity {
 
 
         return baos.toString();
+    }
+
+    public String getCommand1() {
+        String commandMacbookProSecondRaw = "input tap 421 267\n";
+        String commandMacbookProFirstRaw = "input tap 150 153\n";
+        String tapMyUsersField = "input tap 250 250\n"; // moi polzovateli
+        String tapMacbook = "input tap 215 190\n"; // MacBook
+        String arrowDown = "input keyevent 20\n";
+        String teamViewerPackageName = "com.teamviewer.remotecontrollib.activity/.MainActivity\n";
+        String teamViewerCommandXDA = "am start -a android.intent.action.MAIN -n com.teamviewer.teamviewer.market.mobile/com.teamviewer.remotecontrollib.activity.MainActivity\n";
+        String teamViewrAppName = "com.teamviewer.teamviewer.market.mobile.application.RemoteControlApplication";
+
+        String commandAndrewAndAndrii =
+                "input keyevent 82\n" + // power on
+                        "sleep 1\n" +
+                        "am start -n com.spac.projectorgalaxybeamtoggle/.MainActivity\n" + // start pojector
+                        "sleep 1\n" +
+                        "input keyevent 4\n" + // back
+                        "sleep 1\n" +
+//                        "am start -n  com.google.chromeremotedesktop/org.chromium.chromoting.Chromoting\n" + // start Chrome Remote
+//                        "am start -n " + teamViewerPackageName + // start Team Viewer
+                        teamViewerCommandXDA +
+                        "sleep 3\n" +
+//                        "content insert --uri content://settings/system --bind name:s:accelerometer_rotation --bind value:i:0\n" + // turn of auto rotate
+//                        "sleep 1\n" +
+//                        "content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1\n" + // force landscape
+//                        "sleep 2\n" +
+                        tapMyUsersField +
+                        "sleep 1\n" +
+//                        "input text \"000000\"\n" + // password
+                        tapMacbook +
+                        "sleep 1\n" +
+                        "input keyevent 66\n" + // enter
+                        "sleep 2\n" +
+                        "input tap 700 90\n"; // full screen
+//                        "sleep 1\n" +
+//                        "sh /sdcard/sendevent_input4.sh\n"                ;
+
+        return commandAndrewAndAndrii;
     }
 
     //endregion SSH methods
